@@ -29,14 +29,13 @@ class SlyricsUI:
         self._window.remove(self._window.get_children()[0])
         if connected:
             self._window.add(self._box_main)
-            print("connected!")
         else:
+            self._window.set_title("Slyrics (disconnected)")
             self._window.add(self._box_loading)
-            print("disconnected!")
 
     def update_status(self, status):
         self._label_song.set_text(status.get_track_string())
-        self._window.set_title("Slyrics ({0})".format(status.get_version()))
+        self._window.set_title("Slyrics (connected to Spotify {0})".format(status.get_version()))
         self._label_lyrics.set_text("")
         self._link_lyrics.hide()
 

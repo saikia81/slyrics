@@ -11,16 +11,18 @@ from slyrics.version import __version__
 import slyrics.scrapers as scrapers
 
 def loop(ui):
-    print("finding spotify...")
-    client = SpotifyClient()
-    try:
-        client.find()
-    except Exception as e:
-        raise e
-    print("found spotify on port {0}".format(client.get_port()))
+    client = None
+    def find():
+        client = SpotifyClient()
+        try:
+            client.find()
+        except Exception as e:
+            return None
+        print("found spotify on port {0}".format(client.get_port()))
+        return client
 
     status = None
-    def update(status):
+    def update():
         try:
             temp = client.get_status()
         except Exception as e:
@@ -41,7 +43,14 @@ def loop(ui):
         return temp
 
     while True:
-        status = update(status)
+        if not client:
+            client = find()
+            continue
+        status = update()
+        if not status:
+            print("finding spotify...")
+            client = None
+            continue
         time.sleep(0.5)
 
 def main():

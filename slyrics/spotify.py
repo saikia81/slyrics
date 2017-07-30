@@ -88,4 +88,9 @@ class SpotifyClient:
         return self._port
 
     def get_status(self):
-        return SpotifyStatus(self._req("/remote/status.json"))
+        res = self._req("/remote/status.json")
+        if "error" in res:
+            raise Exception("api error {0}: {1}".format(res["error"]["type"], res["error"]["message"]))
+        if not "track" in res:
+            raise Exception("no track info in status response")
+        return SpotifyStatus(res)
