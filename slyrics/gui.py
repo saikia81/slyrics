@@ -1,3 +1,5 @@
+from slyrics.scrapers import scrapers
+
 import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import GLib
@@ -15,6 +17,12 @@ class SlyricsUI:
         self._label_song = builder.get_object("label_song")
         self._label_lyrics = builder.get_object("label_lyrics")
         self._link_lyrics = builder.get_object("link_lyrics")
+        self._combo_sources = builder.get_object("combo_sources")
+        self._store_sources = builder.get_object("store_sources")
+
+        for scraper in scrapers:
+            self._store_sources.insert(0, [scraper.name])
+        self._combo_sources.set_active(0)
 
         self._window.add(self._box_loading)
 
@@ -38,15 +46,18 @@ class SlyricsUI:
         self._window.set_title("Slyrics (connected to Spotify {0})".format(status.get_version()))
         self._label_lyrics.set_text("")
         self._link_lyrics.hide()
+        self._combo_sources.hide()
 
     def update_lyrics(self, lyrics):
         if not lyrics:
             self._link_lyrics.set_uri("")
             self._link_lyrics.hide()
+            self._combo_sources.hide()
             text = "Couldn't find lyrics."
         else:
             self._link_lyrics.set_uri(lyrics.get_url())
             self._link_lyrics.show()
+            self._combo_sources.show()
             text = lyrics.get_text()
         self._label_lyrics.set_text(text)
 

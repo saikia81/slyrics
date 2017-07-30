@@ -33,6 +33,12 @@
       </packing>
     </child>
   </object>
+  <object class="GtkListStore" id="store_sources">
+    <columns>
+      <!-- column-name name -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
   <object class="GtkBox" id="box_main">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -89,6 +95,24 @@
         <property name="can_focus">False</property>
         <property name="spacing">5</property>
         <child>
+          <object class="GtkComboBox" id="combo_sources">
+            <property name="width_request">100</property>
+            <property name="can_focus">False</property>
+            <property name="model">store_sources</property>
+            <child>
+              <object class="GtkCellRendererText"/>
+              <attributes>
+                <attribute name="text">0</attribute>
+              </attributes>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
           <object class="GtkLinkButton" id="link_lyrics">
             <property name="label" translatable="yes">Source</property>
             <property name="can_focus">True</property>
@@ -98,24 +122,21 @@
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">0</property>
+            <property name="position">1</property>
           </packing>
         </child>
         <child>
-          <object class="GtkScale" id="scale_song">
+          <object class="GtkAlignment">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="orientation">vertical</property>
-            <property name="show_fill_level">True</property>
-            <property name="fill_level">100</property>
-            <property name="round_digits">1</property>
-            <property name="draw_value">False</property>
-            <property name="value_pos">bottom</property>
+            <property name="can_focus">False</property>
+            <child>
+              <placeholder/>
+            </child>
           </object>
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
-            <property name="position">1</property>
+            <property name="position">2</property>
           </packing>
         </child>
         <child>
@@ -130,7 +151,7 @@
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">2</property>
+            <property name="position">3</property>
           </packing>
         </child>
       </object>

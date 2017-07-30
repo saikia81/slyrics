@@ -14,8 +14,8 @@ class Lyrics:
         return self._text
 
 class Scraper:
-    def __init__(self):
-        pass
+    def __init__(self, name):
+        self.name = name
 
     def req(self, url, **kwargs):
         return requests.get(url, **kwargs)
@@ -25,7 +25,7 @@ class Scraper:
 
 class GeniusScraper(Scraper):
     def __init__(self):
-        super().__init__()
+        super().__init__("Genius")
 
     def find(self, track, artist):
         url = "https://genius.com/search?q={0} {1}".format(track, artist)
