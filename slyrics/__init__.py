@@ -55,13 +55,13 @@ def loop(ui):
 
 def main():
     parser = argparse.ArgumentParser(description="An external lyrics addon for Spotify")
-    parser.add_argument("--host", dest="host", help="the host to scan")
-    parser.add_argument("--port", dest="port", type=int, default=-1,
-                        help="instead of scanning, use this port")
+    #parser.add_argument("--host", dest="host", help="the host to scan")
+    #parser.add_argument("--port", dest="port", type=int, default=-1,
+    #                    help="instead of scanning, use this port")
     parser.add_argument("--version", dest="version", action="store_true", default=False,
                         help="print version")
-    parser.add_argument("-v", "--verbose", dest="verbose", action="store_true", default=False,
-                        help="be verbose")
+    #parser.add_argument("-v", "--verbose", dest="verbose", action="store_true", default=False,
+    #                    help="be verbose")
     args = parser.parse_args(sys.argv[1:])
 
     if args.version:
