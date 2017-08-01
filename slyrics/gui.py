@@ -1,4 +1,5 @@
 from slyrics.scrapers import scrapers
+from slyrics.util import get_data_filename
 
 import gi
 gi.require_version("Gtk", "3.0")
@@ -8,7 +9,7 @@ from gi.repository import Gtk
 class SlyricsUI:
     def __init__(self):
         builder = Gtk.Builder()
-        builder.add_from_file("slyrics/assets/ui.glade")
+        builder.add_from_file(get_data_filename("assets/ui.glade"))
         builder.connect_signals(self)
 
         self._window = builder.get_object("window_main")

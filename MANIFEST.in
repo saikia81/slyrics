@@ -1,1 +1,2 @@
 include slyrics/assets/*
+exclude slyrics/assets/*~
