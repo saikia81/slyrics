@@ -1,5 +1,4 @@
 from bs4 import BeautifulSoup
-
 import requests
 
 class Lyrics:
@@ -44,8 +43,39 @@ class GeniusScraper(Scraper):
 
         return Lyrics(url, lyrics.p.text)
 
+class MusixmatchScraper(Scraper):
+    def __init__(self):
+        super().__init__("Musixmatch")
+
+    def req(self, url, **kwargs):
+        # yes, circumventing musixmatch's scraping prevention is really this easy
+        return super().req(url, headers={"User-Agent": ""}, **kwargs)
+
+    def find(self, track, artist):
+        base_url = "https://www.musixmatch.com"
+        url = "{0}/search/{1} {2}".format(base_url, track, artist)
+        res = self.req(url).text
+        soup = BeautifulSoup(res, 'html.parser')
+        url = soup.find("h2", {"class": "media-card-title"}).a
+        if not url:
+            raise Exception("couldn't find track")
+        url = base_url + url["href"]
+
+        res = self.req(url).text
+        soup = BeautifulSoup(res, 'html.parser')
+        parts = soup.find_all("p", {"class": "mxm-lyrics__content"})
+        if not parts:
+            raise Exception("error parsing lyrics")
+
+        lyrics = ""
+        for part in parts:
+            lyrics += part.text
+
+        return Lyrics(url, lyrics)
+
 scrapers = [
-    GeniusScraper(),
+    MusixmatchScraper(),
+    GeniusScraper()
 ]
 
 def find(track, artist):

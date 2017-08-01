@@ -21,7 +21,7 @@ class SlyricsUI:
         self._store_sources = builder.get_object("store_sources")
 
         for scraper in scrapers:
-            self._store_sources.insert(0, [scraper.name])
+            self._store_sources.insert(-1, [scraper.name])
         self._combo_sources.set_active(0)
 
         self._window.add(self._box_loading)
