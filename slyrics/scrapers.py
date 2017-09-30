@@ -73,6 +73,18 @@ class MusixmatchScraper(Scraper):
 
         return Lyrics(url, lyrics)
 
+def filter_track(track):
+    """This function returns the track name as a string. Removes words, and  which might impede finding the lyricsm."""
+    filtered_track = track
+    for f in FILTERS:
+        index = track.lower().find(f.lower())  # ignore case
+        if index != -1:
+            filtered_track = track[: index] + track[index + len(f):]
+    return filtered_track  # remove trailing white space
+
+FILTERS = ["(explicit)"]  # todo: use/build filter strings  'smarter'
+FILTERS = [" - " + x for x in FILTERS]
+
 scrapers = [
     MusixmatchScraper(),
     GeniusScraper()
@@ -81,7 +93,8 @@ scrapers = [
 def find(track, artist):
     for scraper in scrapers:
         try:
-            return scraper.find(track, artist)
+            filtered_track = filter_track(track)
+            return scraper.find(filtered_track, artist)
         except Exception as e:
             continue
     return None
