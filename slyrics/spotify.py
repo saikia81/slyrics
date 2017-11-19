@@ -25,7 +25,7 @@ class SpotifyStatus:
         return not self.__eq__(other)
 
 class SpotifyClient:
-    _ports = (4370, 4380)
+    _ports = (4380, 4389)
 
     def __init__(self, host="localhost", port=None):
         self._host = host
