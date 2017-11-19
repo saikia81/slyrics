@@ -34,8 +34,7 @@ class SpotifyClient:
         self._csrf = None
 
     def _req_raw(self, url, **kwargs):
-        # todo: verify=True
-        return requests.request("GET", url, verify=False, **kwargs).json()
+        return requests.request("GET", url, verify=True, **kwargs).json()
 
     def _req(self, path, params=None, auth=True, spoof=True, **kwargs):
         url = self._get_url(path)
@@ -56,7 +55,7 @@ class SpotifyClient:
         return self._req_raw(url, headers=headers, params=params, **kwargs)
 
     def _get_url(self, path):
-        return "https://{0}:{1}{2}".format(self._host, self._port, path)
+        return "http://{0}:{1}{2}".format(self._host, self._port, path)
 
     def _get_field(self, res, name):
         if not name in res:
