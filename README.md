@@ -2,7 +2,7 @@
 
 __slyrics__ is an external lyrics addon for Spotify.
 
-![](https://u.alexbakker.me/dl?l=eMVo9qNmPtis6CMq.png#)
+![](https:/alexbakker.me/u/ud8f2b5y.png)
 
 It uses Spotify's undocumented local HTTP API to retrieve info about the track
 that is currently playing. You can learn more about this API by reading [Carl
