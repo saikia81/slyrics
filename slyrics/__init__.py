@@ -5,7 +5,7 @@ import threading
 import time
 
 from slyrics.gui import SlyricsUI
-from slyrics.spotify import SpotifyClient
+from slyrics.spotify import SpotifyWebClient, SpotifyBusClient
 from slyrics.util import die
 from slyrics.version import __version__
 import slyrics.scrapers as scrapers
@@ -13,12 +13,22 @@ import slyrics.scrapers as scrapers
 def loop(ui):
     client = None
     def find():
-        client = SpotifyClient()
+        client = SpotifyWebClient()
+        try:
+            client.find()
+        except Exception as e:
+            pass  # try a different client
+        else:
+            print("found spotify on port {0}".format(client.get_port()))
+            return client
+
+        client = SpotifyBusClient()
         try:
             client.find()
         except Exception as e:
             return None
-        print("found spotify on port {0}".format(client.get_port()))
+        else:
+            print("found spotify on dbus")
         return client
 
     status = None

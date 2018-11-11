@@ -1,6 +1,10 @@
-import requests
+from datetime import timedelta
 
-class SpotifyStatus:
+import requests
+import dbus
+
+
+class SpotifyWebStatus:
     def __init__(self, status):
         self._status = status
 
@@ -24,7 +28,47 @@ class SpotifyStatus:
     def __ne__(self, other):
         return not self.__eq__(other)
 
-class SpotifyClient:
+
+class SpotifyBusStatus:
+    def __init__(self, status):
+        self._status = status
+
+    def get_track_string(self):
+        return "{0} - {1}".format(self.get_track_name(), self.get_track_artist())
+
+    def get_track_position(self):
+        microtime = self._status.get('mpris:length')
+        return str(timedelta(microseconds=microtime))[:-7]
+
+    def get_track_name(self):
+        return self._status.get('xesam:title')
+
+    def get_track_artist(self):
+        return self._status.get('xesam:artist')[0]
+
+    def get_version(self):
+        return "Unavailable"
+
+    def __eq__(self, other):
+        return (other and
+                self.get_track_name() == other.get_track_name() and
+                self.get_track_artist() == other.get_track_artist())
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+
+class spotifyClient:
+    """Abstract class which defines the Spotify interface"""
+
+    def find(self):
+        raise NotImplementedError("This method has not been implemented!")
+
+    def get_status(self):
+        raise NotImplementedError("This method has not been implemented!")
+
+
+class SpotifyWebClient(spotifyClient):
     _ports = (4380, 4389)
 
     def __init__(self, host="localhost", port=None):
@@ -92,4 +136,15 @@ class SpotifyClient:
             raise Exception("api error {0}: {1}".format(res["error"]["type"], res["error"]["message"]))
         if not "track" in res:
             raise Exception("no track info in status response")
-        return SpotifyStatus(res)
+        return SpotifyWebStatus(res)
+
+
+class SpotifyBusClient(spotifyClient):
+    def find(self):
+        bus = dbus.SessionBus()
+        self._bus = bus.get_object('org.mpris.MediaPlayer2.spotify', '/org/mpris/MediaPlayer2')
+        self.player = dbus.Interface(self._bus, 'org.freedesktop.DBus.Properties')
+
+    def get_status(self):
+        res = self.player.Get('org.mpris.MediaPlayer2.Player', 'Metadata')
+        return SpotifyBusStatus(res)
