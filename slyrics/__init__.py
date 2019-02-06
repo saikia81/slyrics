@@ -34,26 +34,26 @@ def loop(ui):
     status = None
     def update():
         try:
-            temp = client.get_status()
+            _status = client.get_status()
         except Exception as e:
             print("error retrieving status: {0}".format(e))
-            temp = None
-        if (not temp) ^ (not status):
-            ui.on_connection_status_change(temp is not None)
-        if not temp:
+            return status  # reuse the old status, if an error ocurred
+        if (not _status) ^ (not status):
+            ui.on_connection_status_change(_status is not None)
+        if not _status:
             return None
-        if temp != status:
-            ui.on_status_change(temp)
+        if _status != status:
+            ui.on_status_change(_status)
             lyrics = None
             try:
-                lyrics = scrapers.find(temp.get_track_name(), temp.get_track_artist())
+                lyrics = scrapers.find(_status.get_track_name(), _status.get_track_artist())
             except:
                 pass
             ui.on_lyrics_change(lyrics)
-        return temp
+        return _status
 
     while True:
-        if not client:
+        if client is None or not client:
             client = find()
             continue
         status = update()
